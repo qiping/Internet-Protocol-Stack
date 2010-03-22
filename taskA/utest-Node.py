@@ -11,8 +11,6 @@
 
 
 import errno      # For errors!
-import os         # OS-related functions.
-import shutil     # High-level file operations.
 import sys        # Basic system functionality.
 import unittest   # For testing, yay!'
 

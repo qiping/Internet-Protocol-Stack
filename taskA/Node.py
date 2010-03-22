@@ -11,7 +11,6 @@
 
 
 import errno      # For errors!
-import os         # OS-related functions.
 import Queue      # This is BIG for threads: mostly for locking semantics.
 import re         # Regular expressions.
 import socket     # Low-level networking interface.
