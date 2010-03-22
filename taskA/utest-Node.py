@@ -20,19 +20,25 @@ import Node
 
 
 class TestNodeFunctions (unittest.TestCase):
-  def TestUpdateAllLinks (self):
+  def test_ConfigNetwork (self):
+    global node
+    node = Node.ConfigInitialNetworkTopology('itc.txt', 1)
+    
+    
+  def test_UpdateAllLinks (self):
     pass
     
   
-  def TestUpdateLink (self):
+  def test_UpdateLinkStatus (self):
+    node.UpdateLinkStatus((2, 1))
+    node.PrintContents()
+    
+    
+  def test_AddLink (self):
     pass
     
     
-  def TestAddLink (self):
-    pass
-    
-    
-  def TestRemoveLink (self):
+  def test_RemoveLink (self):
     pass
     
 
