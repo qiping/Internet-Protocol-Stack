@@ -20,9 +20,29 @@ import sys        # Basic system functionality.
 import threading  # Higher-level threading interface.
 
 
+def InitializeSocket(nid=None, hostname=None, port=None)
+  pass
+  
+
+def l2_sendto(nid=None, hostname=None)
+  pass
+
+
+def l2_sendall(nid=None, hostname=None)
+  pass
+  
+  
+def l2_recv(nid=None, hostname=None)
+  pass
+  
+
+def l2_recvfrom(nid=None, hostname=None)
+  pass
+
+
 class Frame (object):
   """
-  something
+  hedaer = MTU, payload, ip source, ip dest, port, length.
   """
   pass
   
