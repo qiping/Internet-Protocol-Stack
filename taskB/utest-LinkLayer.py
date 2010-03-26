@@ -20,6 +20,12 @@ import LinkLayer
 
 
 class TestNodeFunctions (unittest.TestCase):
+  def test_InitializeSocket (self):
+    node = Node.Node(1, 'localhost', 5555)
+    print(node)
+    client_address, client_socket = LinkLayer.InitializeSocket(node)
+    print(client_socket)
+    client_socket.close()
   pass
     
 

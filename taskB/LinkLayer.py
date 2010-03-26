@@ -13,30 +13,39 @@
 
 
 import errno      # For errors!
-import Queue      # This is BIG for threads: mostly for locking semantics.
 import re         # Regular expressions.
 import socket     # Low-level networking interface.
 import sys        # Basic system functionality.
 import threading  # Higher-level threading interface.
 
 
-def InitializeSocket(nid=None, hostname=None, port=None)
+def InitializeSocket (node=None):
+  ip = node.GetHostName()
+  ip = socket.gethostbyname(ip)
+  port = node.GetPort()
+  
+  client_address = (ip, port)
+  # Create client's socket. We are using UDP.
+  client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+  # Set any socket options pertaining to multicast.
+  client_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+  
+  return client_address, client_socket
+  
+
+def l2_sendto (nid=None, hostname=None, frame=None):
+  pass
+
+
+def l2_sendall (nid=None, hostname=None, frame=None):
+  pass
+  
+  
+def l2_recv (nid=None, hostname=None):
   pass
   
 
-def l2_sendto(nid=None, hostname=None)
-  pass
-
-
-def l2_sendall(nid=None, hostname=None)
-  pass
-  
-  
-def l2_recv(nid=None, hostname=None)
-  pass
-  
-
-def l2_recvfrom(nid=None, hostname=None)
+def l2_recvfrom (nid=None, hostname=None):
   pass
 
 
