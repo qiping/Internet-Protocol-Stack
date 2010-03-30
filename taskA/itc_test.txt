@@ -1,0 +1,4 @@
+1 u-02.ecc.unr.edu 17878 2 3 1000
+2 localhost 17879 1 4 1200
+3 u-07.ecc.unr.edu 17879 1 4 600
+4 u-12.ecc.unr.edu 17890 2 3 800

@@ -24,6 +24,16 @@ def ConfigInitialNetworkTopology (script, nid):
   
   # Read the entire file, store each line as a string into a list.
   list = itc_script.readlines()
+  # This 'hostnames' list is a list of hostnames pertaining to the NIDs.
+  # Note the 'off-by-one' issue here. We must account for this by doing -1.
+  # This list is necessary to attribute NIDs to hostnames in the self._links.
+  hostnames = []
+  
+  # This is necessary to create our association of NIDs -> host names for 
+  # every single node. This will be needed for NID -> hostname -> IP resolution.
+  for entry in list:
+    temp = entry.split(' ')
+    hostnames.append(temp[1])
 
   for entry in list:
     temp = entry.split(' ')
@@ -39,7 +49,9 @@ def ConfigInitialNetworkTopology (script, nid):
       
       # Reminder: range goes from [0... n]
       for i in range(number_of_nodes):
-        node.AddLink((int(temp[index+i]), 1))
+        # i.e., (NID, host name, flag) -> (2, localhost, 1).
+        corresponding_hostname = hostnames[int(temp[index+i])-1]
+        node.AddLink((int(temp[index+i]), corresponding_hostname, 1))
       
       # Get the last item in the list, strip out the newline character, and BAM!
       node.SetMTU(int(temp[-1].strip()))
@@ -64,11 +76,11 @@ class Node(object):
     [3] _udp_port = integer
       This is used for all communications to/from the node.
       
-    [4] _links = list of tuples (integer, boolean).
+    [4] _links = list of tuples (integer, string, boolean).
       This contains a list of the links this node is has links for. The flag 
       is necessary to determine the link's status (up or down). Note that this list 
       is not static in that more nodes can link to this node. With this, nodes are 
-      implicitly linked together.
+      implicitly linked together. The string is the hostname.
       
     [5] _mtu = integer (casted to byte)
       This is a link's maximum transmission unit in bytes. Apparently, each node will 
@@ -132,7 +144,7 @@ class Node(object):
   def UpdateLinkStatus (self, individual_link):
     # Dealing with flags up in here.
     self._links.remove(individual_link)
-    self._links.append((individual_link[0], abs(individual_link[1]-1)))
+    self._links.append((individual_link[0], individual_link[1], abs(individual_link[2]-1)))
   
   
   def AddLink (self, individual_link):
