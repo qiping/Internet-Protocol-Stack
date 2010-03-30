@@ -33,6 +33,10 @@ def InitializeSocket (node=None):
   return client_address, client_socket
   
 
+def l2_send (nid=None, hostname=None, frame=None):
+  pass
+  
+  
 def l2_sendto (nid=None, hostname=None, frame=None):
   pass
 
@@ -51,7 +55,85 @@ def l2_recvfrom (nid=None, hostname=None):
 
 class Frame (object):
   """
-  hedaer = MTU, payload, ip source, ip dest, port, length.
+  This class defines our layer 2 unit, the frame. In this class, we include the 
+  header and the payload of our frame. The header consists of the following:
+  
+    [1] _source_ip = string
+      This is the 32-bit IP address of the host.
+      
+    [2] _source_port = integer
+    
+    [3] _dest_ip = string
+      This is the 32-bit IP address of where we are sending our information.
+    
+    [4] _dest_port = integer
+      
+    [5] _length = integer
+      This is the length of the payload.
+      
+    [6] _payload = string
+      This is the message we are sending.
   """
-  pass
+  def __init__ (self, source_ip='localhost', source_port=5555, 
+                dest_ip='localhost', dest_port=5556, length=0, payload=None):
+    self._source_ip = source_ip
+    self._source_port = source_port
+    self._dest_ip = dest_ip
+    self._dest_port = dest_port
+    self._length = length
+    self._payload = payload
+    
+  
+  def GetSourceIP (self):
+    return self._source_ip
+    
+    
+  def GetSourcePort (self):
+    return self._source_port
+    
+    
+  def GetDestIP (self):
+    return self._dest_ip
+    
+    
+  def GetDestPort (self):
+    return self._dest_port
+    
+    
+  def GetLength (self):
+    return self._length
+    
+  
+  def GetPayload (self):
+    return self._payload
+    
+    
+  def SetSourceIP (self, source_ip):
+    self._source_ip = source_ip
+    
+    
+  def SetSourcePort (self, source_port):
+    self._source_port = source_port
+    
+    
+  def SetDestIP (self, dest_ip):
+    self._dest_ip = dest_ip
+    
+    
+  def SetDestPort (self, dest_port):
+    self._dest_port = dest_port
+    
+    
+  def SetPayload (self, payload):
+    self._payload = payload
+    self._length = len(payload)
+
+
+  def PrintContents (self):
+    print(self._source_ip)
+    print(self._source_port)
+    print(self._dest_ip)
+    print(self._dest_port)
+    print(self._length)
+    print(self._payload)
   

@@ -26,7 +26,11 @@ class TestNodeFunctions (unittest.TestCase):
     client_address, client_socket = LinkLayer.InitializeSocket(node)
     print(client_socket)
     client_socket.close()
-  pass
+  
+  
+  def test_FrameStuff (self):
+    some_frame = LinkLayer.Frame()
+    print(some_frame)
     
 
 if __name__ == '__main__':
