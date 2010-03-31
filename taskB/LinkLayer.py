@@ -38,28 +38,12 @@ def InitializeSocket (node=None):
   
   return client_address, client_socket
   
-
-def ResolveNID (nid=None, node=None):
-  """
-  THIS WILL BE FOR LAYER 3.
-  
-  This function takes in two parameters, a nid and Node respectively. From there, 
-  it creates a temporary copy of all the links associated with this node (we are 
-  on localhost). After that, we iterate through all the links where each element of 
-  this 'links' variable is a tuple consisting of (nid, hostname, flag). The flag 
-  determines if the link is up or down. If our nid matches an nid in the 'links' 
-  list variable, then we return the host name. This is necessary for resolving the 
-  host name so we can use an ip address to send Frames over the wire.
-  """
-  links = node.GetLinks()
-  
-  for entry in links:
-    if nid == entry[0]:
-      return entry[1]
-  
   
 def l2_sendto (client_socket=None, hostname=None, frame=None, node=None):
   """
+  This function will be used in Layer 3, the Network layer. Nowhere in this Layer 2
+  is this function used--rather, this layer purely uses good ol' UDP sendto.
+  
   There are several states within this function.
   
   State (1). Is host name blank?
@@ -105,6 +89,10 @@ def l2_sendto (client_socket=None, hostname=None, frame=None, node=None):
   
 
 def l2_recvfrom (client_socket=None, node=None):
+  """
+  This function will be used in Layer 3, the Network layer. Nowhere in this Layer 2
+  is this function used--rather, this layer purely uses good ol' UDP recvfrom.
+  """
   data = ''.encode()
   buffer = ''.encode()
   mtu = node.GetMTU()

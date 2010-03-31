@@ -28,6 +28,16 @@ import LinkLayer
 class DVRP (object):
   """
   This class will maintain the a routing table for each node. That is, every instance 
-  of our application will have ONE and only ONE routing table.
+  of our application will have ONE and only ONE routing table. The members are as follow:
+  
+    [1] _routing_table = <we must define our data structure we want to use here>
+    
   """
+  def __init__ (self, routing_table=None):
+    self._routing_table = routing_table
+    
+    
+  def GetRoutingTable (self):
+    return self._routing_table
+    
   pass
