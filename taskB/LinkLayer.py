@@ -60,8 +60,6 @@ def ResolveNID (nid=None, node=None):
   
 
 # Deal with MTUs, NID -> IP resolution.
-def l2_send (hostname=None, frame=None):
-  pass
   
   
 def l2_sendto (client_socket=None, hostname=None, frame=None):
@@ -81,14 +79,6 @@ def l2_sendto (client_socket=None, hostname=None, frame=None):
     client_socket.sendto(frame.GetPayload().encode(), dest_address)
   else:
     print('No host name specified for l2_sendto.')
-
-
-def l2_sendall (hostname=None, frame=None):
-  pass
-  
-  
-def l2_recv (hostname=None):
-  pass
   
 
 def l2_recvfrom (client_socket=None, node=None):
