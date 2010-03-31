@@ -13,7 +13,6 @@
 
 
 import errno      # For errors!
-import re         # Regular expressions.
 import socket     # Low-level networking interface.
 import sys        # Basic system functionality.
 import threading  # Higher-level threading interface.
@@ -58,25 +57,49 @@ def ResolveNID (nid=None, node=None):
     if nid == entry[0]:
       return entry[1]
   
-
-# Deal with MTUs, NID -> IP resolution.
   
+def l2_sendto (client_socket=None, hostname=None, frame=None, node=None):
+  """
+  There are several states within this function.
   
-def l2_sendto (client_socket=None, hostname=None, frame=None):
-  # TODO(Jeff): I have no considered MTUs.
+  State (1). Is host name blank?
+    Yes: Print error
+    No: Move to State (2).
+  
+  State (2). Is hostname "physically" connect to us?
+    Yes: Move to State (3).
+    No: Print error
+  
+  State (3). Is payload larger than MTU - 2?
+    Yes: Print error
+    No: Send via UDP.
+  """
   if hostname is not None:
-    # Resolve host name by doing host name -> ip address. Then include the port.
-    # Unless the destination port was previous explicitly changed, it will use the 
-    # default of port # 5556.
-    dest_address = (socket.gethostbyname(hostname), frame.GetDestPort())
-    # Make sure it is the same as the Frame.
-    frame.SetDestIP(dest_address[0])
-    # Prepare our string to send over the wire.
-    payload = frame.GetPayload()
-    payload += '\r\n'
-    frame.SetPayload(payload)
-    # Now send it over the wire. Don't forget to encode to a byte string.
-    client_socket.sendto(frame.GetPayload().encode(), dest_address)
+    # 'entry' in this case is a tuple. ie., (NID, hostname, flag).
+    for entry in node.GetLinks():
+      if hostname in entry:
+        # -2 for \r\n, which is appended in send() and recv() functions.
+        if len(frame.GetPayload()) >= node.GetMTU() - 2:
+          print('Cannot send over wire. Payload > MTU of the link.')
+        elif len(frame.GetPayload()) <= node.GetMTU() - 2:
+          # Resolve host name by doing host name -> ip address. Then include the port.
+          # Unless the destination port was previous explicitly changed, it will use the 
+          # default of port # 5556.
+          dest_address = (socket.gethostbyname(hostname), frame.GetDestPort())
+          # Make sure it is the same as the Frame.
+          frame.SetDestIP(dest_address[0])
+          # Prepare our string to send over the wire.
+          payload = frame.GetPayload()
+          payload += '\r\n'
+          frame.SetPayload(payload)
+          # Now send it over the wire. Don't forget to encode to a byte string.
+          client_socket.sendto(frame.GetPayload().encode(), dest_address)
+        # Break out of the 'for' loop.
+        break
+      else:
+        print('You are not "physically" connected to that node.')
+        # Break out of the 'for' loop.
+        break
   else:
     print('No host name specified for l2_sendto.')
   
@@ -87,14 +110,13 @@ def l2_recvfrom (client_socket=None, node=None):
   mtu = node.GetMTU()
   
   # Read a bunch of bytes up to the MTU.
-  while len(data) < mtu:
+  while len(data) <= mtu:
     buffer, external_address = client_socket.recvfrom(mtu-len(data))
     if buffer:
       data += buffer
       
     # This is our protocol. Stop reading when we see \r\n.
     if '\r\n'.encode() in buffer:
-      print('\r\n byte in bufer')
       break
   
   # Here, the source is coming from an external address, meaning we are receiving a packet.
@@ -179,7 +201,7 @@ class Frame (object):
   def SetDestPort (self, dest_port):
     self._dest_port = dest_port
     
-    
+  
   def SetPayload (self, payload):
     self._payload = payload
     self._length = len(payload)

@@ -35,20 +35,25 @@ class TestNodeFunctions (unittest.TestCase):
     
   def test_l2_sendto (self):
     node = Node.Node(1, 'localhost', 5556)
+    node.SetMTU(1500)
+    node.AddLink((2, 'localhost', 1))
+    node.AddLink((3, 'localhost', 1))
     client_address, client_socket = LinkLayer.InitializeSocket(node)
     some_frame = LinkLayer.Frame()
     some_frame.SetPayload('This is a payload.')
-    LinkLayer.l2_sendto(client_socket, 'localhost', some_frame)
+    LinkLayer.l2_sendto(client_socket, 'localhost', some_frame, node)
     client_socket.close()
     
   
   def test_l2_recvfrom (self):
     node = Node.Node(1, 'localhost', 5556)
     node.SetMTU(1500)
+    node.AddLink((2, 'localhost', 1))
+    node.AddLink((3, 'localhost', 1))
     client_address, client_socket = LinkLayer.InitializeSocket(node)
     some_frame = LinkLayer.Frame()
     some_frame.SetPayload('This is a payload.')
-    LinkLayer.l2_sendto(client_socket, 'localhost', some_frame)
+    LinkLayer.l2_sendto(client_socket, 'localhost', some_frame, node)
     frame, external_address = LinkLayer.l2_recvfrom(client_socket, node)
     client_socket.close()
     pass
