@@ -32,6 +32,10 @@ def InitializeSocket (node=None):
   client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
   # Set any socket options pertaining to multicast.
   client_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+  # Make this a non-blocking socket. If a recv() call doesn't find any data, then 
+  # an exception is raised. If send() doesn't immediately have any data to send, 
+  # then an exception is also raised.
+  client_socket.setblocking(0)
   
   return client_address, client_socket
   

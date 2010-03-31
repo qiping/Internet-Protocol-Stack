@@ -49,7 +49,7 @@ class TestNodeFunctions (unittest.TestCase):
     some_frame = LinkLayer.Frame()
     some_frame.SetPayload('This is a payload.')
     LinkLayer.l2_sendto(client_socket, 'localhost', some_frame)
-    #frame, external_address = LinkLayer.l2_recvfrom(client_socket, node)
+    frame, external_address = LinkLayer.l2_recvfrom(client_socket, node)
     client_socket.close()
     pass
     
