@@ -32,6 +32,27 @@ class TestNodeFunctions (unittest.TestCase):
     some_frame = LinkLayer.Frame()
     print(some_frame)
     
+    
+  def test_l2_sendto (self):
+    node = Node.Node(1, 'localhost', 5556)
+    client_address, client_socket = LinkLayer.InitializeSocket(node)
+    some_frame = LinkLayer.Frame()
+    some_frame.SetPayload('This is a payload.')
+    LinkLayer.l2_sendto(client_socket, 'localhost', some_frame)
+    client_socket.close()
+    
+  
+  def test_l2_recvfrom (self):
+    node = Node.Node(1, 'localhost', 5556)
+    node.SetMTU(1500)
+    client_address, client_socket = LinkLayer.InitializeSocket(node)
+    some_frame = LinkLayer.Frame()
+    some_frame.SetPayload('This is a payload.')
+    LinkLayer.l2_sendto(client_socket, 'localhost', some_frame)
+    #frame, external_address = LinkLayer.l2_recvfrom(client_socket, node)
+    client_socket.close()
+    pass
+    
 
 if __name__ == '__main__':
   suite = unittest.TestLoader().loadTestsFromTestCase(TestNodeFunctions)
