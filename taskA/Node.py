@@ -37,6 +37,8 @@ def ConfigInitialNetworkTopology (script, nid):
 
   for entry in list:
     temp = entry.split(' ')
+    # Temporarily assuming we only have 2 links.
+    node.SetGlobalLinkTable(temp[0], (temp[3], temp[4]))
 
     if node.GetNID() == int(temp[0]):
       node.SetHostName(temp[1])
@@ -89,8 +91,11 @@ class Node(object):
       smallest MTU.
     [6] _shutdown = boolean
       If true, then that means the node is exiting cleanly.
+      
+    [7] _global_link_table = dictionary
+      This is a dictionary of {key:value} where we have {source NID: (neighbor NIDs)}.
   """
-  def __init__ (self, nid=0, host_name=None, udp_port=0, links=[], mtu=0):
+  def __init__ (self, nid=0, host_name=None, udp_port=0, links=[], mtu=0, global_link_table={}):
     self._nid = nid
     self._host_name = host_name
     self._udp_port = udp_port
@@ -99,6 +104,7 @@ class Node(object):
       self._links = list(links)    # Deep copy the list.
     self._mtu = mtu
     self._shutdown = 0
+    self._global_link_table = {}
     
     
   def GetNID (self):
@@ -123,6 +129,10 @@ class Node(object):
   
   def GetShutdownStatus (self):
     return self._shutdown
+    
+  
+  def GetGlobalLinkTable (self):
+    return self._global_link_table
     
     
   def SetNID (self, nid):
@@ -161,6 +171,11 @@ class Node(object):
   
   def SetShutdownStatus (self, shutdown_status):
     self._shutdown = shutdown_status
+    
+    
+  def SetGlobalLinkTable (self, source_nid, neighbor_nid):
+    self._global_link_table[source_nid] = neighbor_nid
+    pass
     
   
   def PrintContents(self):
